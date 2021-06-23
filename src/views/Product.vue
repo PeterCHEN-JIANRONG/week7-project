@@ -32,6 +32,7 @@
 </template>
 <script>
 export default {
+  props: ['id'],
   data() {
     return {
       product: {
@@ -105,8 +106,8 @@ export default {
     },
   },
   created() {
-    const { id } = this.$route.params;
-    this.getProduct(id);
+    // const { id } = this.$route.params;
+    this.getProduct(this.id);
   },
 };
 </script>

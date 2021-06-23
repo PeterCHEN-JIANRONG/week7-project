@@ -19,6 +19,9 @@ const routes = [
         path: 'product/:id',
         name: '產品詳細頁',
         component: () => import('../views/Product.vue'),
+        props: (route) => ({
+          id: route.params.id,
+        }),
       },
       {
         path: 'carts',
