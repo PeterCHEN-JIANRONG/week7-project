@@ -1,6 +1,11 @@
 <template>
   <div class="container">
     <h1>產品管理列表</h1>
+    <div class="text-end mt-4">
+      <button class="btn btn-primary" type="button" @click="openModal(true)">
+        建立新的產品
+      </button>
+    </div>
     <table class="table mt-4">
       <thead>
         <tr>
@@ -9,21 +14,40 @@
           <th width="120">原價</th>
           <th width="120">售價</th>
           <th width="100">是否啟用</th>
+          <th width="200">編輯</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="item in products" :key="item.id">
           <td>{{ item.category }}</td>
           <td>{{ item.title }}</td>
-          <td class="">
+          <td class="text-right">
             {{ item.origin_price }}
           </td>
-          <td class="">
+          <td class="text-right">
             {{ item.price }}
           </td>
           <td>
             <span v-if="item.is_enabled" class="text-success">啟用</span>
             <span v-else>未啟用</span>
+          </td>
+          <td>
+            <div class="btn-group">
+              <button
+                class="btn btn-outline-primary btn-sm"
+                type="button"
+                @click="openModal(false, item)"
+              >
+                編輯
+              </button>
+              <button
+                class="btn btn-outline-danger btn-sm"
+                type="button"
+                @click="openDelProductModal(item)"
+              >
+                刪除
+              </button>
+            </div>
           </td>
         </tr>
       </tbody>
@@ -37,7 +61,7 @@
     </div>
   </div>
   <!-- vue-loading -->
-  <Loading :active="isLoading"></Loading>
+  <Loading :active="isLoading" :z-index="1060"></Loading>
 </template>
 <script>
 import Pagination from '@/components/Pagination.vue';
