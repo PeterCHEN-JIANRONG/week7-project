@@ -81,13 +81,9 @@ export default {
     return {
       products: [],
       pagination: {},
+      currentPage: 1,
       isLoading: false,
-      tempProduct: {
-        imagesUrl: [],
-        options: {
-          sell_status: '',
-        },
-      },
+      tempProduct: {},
       isNew: false,
       productModal: null,
       sellStatusOptions: [
@@ -106,7 +102,7 @@ export default {
   methods: {
     getProducts(page = 1) {
       // this.isLoading = true;
-      const url = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/products?page=${page}`;
+      const url = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/products?page=${page}`;
       this.$http
         .get(url)
         .then((res) => {
@@ -146,18 +142,14 @@ export default {
     openModal(isNew, item) {
       // isNew = true新增, false編輯 product
       if (isNew) {
-        // this.tempProduct = {};
-        this.tempProduct = {
-          imagesUrl: [],
-          options: {
-            sell_status: '',
-          },
-        };
+        this.tempProduct = {};
         this.isNew = true;
+        this.currentPage = 1; // 新增:回第一頁
       } else {
         // this.tempProduct = { ...item };
         this.tempProduct = JSON.parse(JSON.stringify(item));
         this.isNew = false;
+        this.currentPage = this.pagination.current_page; // 更新:回當前頁
       }
       this.productModal.openModal();
     },

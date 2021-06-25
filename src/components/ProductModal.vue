@@ -269,6 +269,9 @@ export default {
       if (!this.tempProduct.imageUrl) {
         this.tempProduct.imageUrl = '';
       }
+      // if (!this.tempProduct.options.sell_status) {
+      //   this.tempProduct.options.sell_status = '';
+      // }
     },
   },
   methods: {
