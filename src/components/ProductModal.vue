@@ -227,6 +227,9 @@
       </div>
     </div>
   </div>
+
+  <!-- vue-loading -->
+  <Loading :active="status.fileUploading" :z-index="1060"></Loading>
 </template>
 <script>
 import modalMixin from '@/mixins/modalMixin';

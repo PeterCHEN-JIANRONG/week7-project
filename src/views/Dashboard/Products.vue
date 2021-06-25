@@ -101,13 +101,12 @@ export default {
   },
   methods: {
     getProducts(page = 1) {
-      // this.isLoading = true;
+      this.isLoading = true;
       const url = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/products?page=${page}`;
       this.$http
         .get(url)
         .then((res) => {
           if (res.data.success) {
-            console.log(res.data.products);
             this.products = res.data.products;
             this.pagination = res.data.pagination;
           } else {
