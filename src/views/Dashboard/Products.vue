@@ -60,11 +60,21 @@
       <Pagination :pages="pagination" @get-products="getProducts"></Pagination>
     </div>
   </div>
+
   <!-- vue-loading -->
   <Loading :active="isLoading" :z-index="1060"></Loading>
+  <!-- ProductModal -->
+  <ProductModal
+    ref="productModalA"
+    @update-product="updateProduct"
+    :product="tempProduct"
+    :isNew="isNew"
+    :sell-status-options="sellStatusOptions"
+  ></ProductModal>
 </template>
 <script>
 import Pagination from '@/components/Pagination.vue';
+import ProductModal from '@/components/ProductModal.vue';
 
 export default {
   data() {
@@ -72,19 +82,36 @@ export default {
       products: [],
       pagination: {},
       isLoading: false,
+      tempProduct: {
+        imagesUrl: [],
+        options: {
+          sell_status: '',
+        },
+      },
+      isNew: false,
+      productModal: null,
+      sellStatusOptions: [
+        '店長推薦',
+        '本週暢銷商品',
+        '本週銷售冠軍',
+        '本月暢銷商品',
+        '本月銷售冠軍',
+      ],
     };
   },
   components: {
     Pagination,
+    ProductModal,
   },
   methods: {
     getProducts(page = 1) {
-      this.isLoading = true;
+      // this.isLoading = true;
       const url = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/products?page=${page}`;
       this.$http
         .get(url)
         .then((res) => {
           if (res.data.success) {
+            console.log(res.data.products);
             this.products = res.data.products;
             this.pagination = res.data.pagination;
           } else {
@@ -95,6 +122,44 @@ export default {
         .catch((err) => {
           console.dir(err);
         });
+    },
+    updateProduct(item) {
+      this.tempProduct = item;
+      let api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/product`;
+      let httpMethod = 'post';
+      let status = '新增產品';
+      if (!this.isNew) {
+        api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/product/${this.tempProduct.id}`;
+        httpMethod = 'put';
+        status = '更新產品';
+      }
+      this.$http[httpMethod](api, { data: this.tempProduct }).then((response) => {
+        if (response.data.success) {
+          this.$httpMessageState(response, status);
+          this.productModal.hideModal();
+          this.getProducts(this.currentPage);
+        } else {
+          this.$httpMessageState(response, status);
+        }
+      });
+    },
+    openModal(isNew, item) {
+      // isNew = true新增, false編輯 product
+      if (isNew) {
+        // this.tempProduct = {};
+        this.tempProduct = {
+          imagesUrl: [],
+          options: {
+            sell_status: '',
+          },
+        };
+        this.isNew = true;
+      } else {
+        // this.tempProduct = { ...item };
+        this.tempProduct = JSON.parse(JSON.stringify(item));
+        this.isNew = false;
+      }
+      this.productModal.openModal();
     },
     successAlert(msg) {
       this.$swal.fire({
@@ -115,6 +180,9 @@ export default {
   },
   created() {
     this.getProducts();
+  },
+  mounted() {
+    this.productModal = this.$refs.productModalA;
   },
 };
 </script>

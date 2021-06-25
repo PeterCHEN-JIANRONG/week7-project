@@ -21,15 +21,24 @@
       </div>
     </div>
   </nav>
+  <ToastMessages></ToastMessages>
   <router-view v-if="checkSuccess" />
 </template>
 <script>
-// 登入驗證
+import emitter from '@/methods/eventBus';
+import ToastMessages from '@/components/ToastMessages.vue';
+
 export default {
   name: 'Dashboard',
+  components: { ToastMessages },
   data() {
     return {
       checkSuccess: false,
+    };
+  },
+  provide() {
+    return {
+      emitter,
     };
   },
   methods: {
@@ -69,6 +78,7 @@ export default {
     },
   },
   created() {
+    // 登入驗證
     this.checkLogin();
   },
 };
