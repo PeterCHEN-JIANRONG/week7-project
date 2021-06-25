@@ -257,7 +257,9 @@ export default {
     return {
       status: {},
       modal: '',
-      tempProduct: {},
+      tempProduct: {
+        options: {},
+      },
     };
   },
   emits: ['update-product'],
@@ -272,9 +274,11 @@ export default {
       if (!this.tempProduct.imageUrl) {
         this.tempProduct.imageUrl = '';
       }
-      // if (!this.tempProduct.options.sell_status) {
-      //   this.tempProduct.options.sell_status = '';
-      // }
+      if (!this.tempProduct.options) {
+        this.tempProduct.options = {
+          sell_status: '',
+        };
+      }
     },
   },
   methods: {
