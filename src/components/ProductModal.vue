@@ -144,7 +144,7 @@
                 </div>
               </div>
 
-              <!-- <div class="row gx-2">
+              <div class="row gx-2">
                 <div class="mb-3 col-md-6">
                   <label for="sell_status" class="form-label">銷售狀態</label>
                   <select
@@ -170,7 +170,7 @@
                     v-model.number="tempProduct.options.score"
                   />
                 </div>
-              </div> -->
+              </div>
 
               <hr />
 
