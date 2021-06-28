@@ -43,7 +43,7 @@
               <button
                 class="btn btn-outline-danger btn-sm"
                 type="button"
-                @click="openDelProductModal(item)"
+                @click="openDelModal(item)"
               >
                 刪除
               </button>
@@ -83,11 +83,11 @@ export default {
   data() {
     return {
       products: [],
+      tempProduct: {},
       pagination: {},
       currentPage: 1,
-      isLoading: false,
-      tempProduct: {},
       isNew: false,
+      isLoading: false,
       productModal: null,
       sellStatusOptions: [
         '店長推薦',
@@ -110,13 +110,13 @@ export default {
       this.$http
         .get(url)
         .then((res) => {
+          this.isLoading = false;
           if (res.data.success) {
             this.products = res.data.products;
             this.pagination = res.data.pagination;
           } else {
-            this.errorAlert(res.data.message);
+            this.$httpMessageState(res, '載入產品');
           }
-          this.isLoading = false;
         })
         .catch((err) => {
           console.dir(err);
@@ -166,26 +166,10 @@ export default {
       }
       this.productModal.openModal();
     },
-    openDelProductModal(item) {
+    openDelModal(item) {
       this.tempProduct = { ...item };
       const delComponent = this.$refs.delModal;
       delComponent.openModal();
-    },
-    successAlert(msg) {
-      this.$swal.fire({
-        // position: 'top-end',
-        icon: 'success',
-        title: msg,
-        showConfirmButton: false,
-        timer: 1500,
-      });
-    },
-    errorAlert(msg) {
-      this.$swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: msg,
-      });
     },
   },
   created() {
