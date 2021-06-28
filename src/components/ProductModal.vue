@@ -38,7 +38,13 @@
               <div class="mb-3">
                 <label for="customFile" class="form-label"
                   >或 上傳圖片
-                  <i class="fas fa-spinner fa-spin" v-if="status.fileUploading"></i>
+                  <div
+                    class="spinner-border spinner-border-sm"
+                    role="status"
+                    v-if="status.fileUploading"
+                  >
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
                 </label>
                 <input
                   type="file"
@@ -227,9 +233,6 @@
       </div>
     </div>
   </div>
-
-  <!-- vue-loading -->
-  <Loading :active="status.fileUploading" :z-index="1060"></Loading>
 </template>
 <script>
 import modalMixin from '@/mixins/modalMixin';
@@ -267,6 +270,7 @@ export default {
   inject: ['emitter'],
   watch: {
     product() {
+      // 預設初始值, 防止'Cannot read property' undefined 錯誤發生
       this.tempProduct = this.product;
       if (!this.tempProduct.imagesUrl) {
         this.tempProduct.imagesUrl = [];

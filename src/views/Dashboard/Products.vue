@@ -139,7 +139,7 @@ export default {
       });
     },
     openModal(isNew, item) {
-      // isNew = true新增, false編輯 product
+      // isNew: true新增, false編輯 product
       if (isNew) {
         this.tempProduct = {};
         this.isNew = true;
