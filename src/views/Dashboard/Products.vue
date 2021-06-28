@@ -71,10 +71,13 @@
     :isNew="isNew"
     :sell-status-options="sellStatusOptions"
   ></ProductModal>
+  <!-- DelProductModal -->
+  <DelProductModal ref="delModal" :item="tempProduct" @del-item="delProduct"></DelProductModal>
 </template>
 <script>
 import Pagination from '@/components/Pagination.vue';
 import ProductModal from '@/components/ProductModal.vue';
+import DelProductModal from '@/components/DelProductModal.vue';
 
 export default {
   data() {
@@ -98,6 +101,7 @@ export default {
   components: {
     Pagination,
     ProductModal,
+    DelProductModal,
   },
   methods: {
     getProducts(page = 1) {
@@ -138,6 +142,16 @@ export default {
         }
       });
     },
+    delProduct(item) {
+      const url = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/product/${item.id}`;
+      this.isLoading = true;
+      this.$http.delete(url).then((response) => {
+        this.$httpMessageState(response, '刪除產品');
+        const delComponent = this.$refs.delModal;
+        delComponent.hideModal();
+        this.getProducts();
+      });
+    },
     openModal(isNew, item) {
       // isNew: true新增, false編輯 product
       if (isNew) {
@@ -151,6 +165,11 @@ export default {
         this.currentPage = this.pagination.current_page; // 更新:回當前頁
       }
       this.productModal.openModal();
+    },
+    openDelProductModal(item) {
+      this.tempProduct = { ...item };
+      const delComponent = this.$refs.delModal;
+      delComponent.openModal();
     },
     successAlert(msg) {
       this.$swal.fire({
