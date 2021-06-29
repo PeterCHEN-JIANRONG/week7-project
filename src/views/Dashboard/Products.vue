@@ -13,7 +13,7 @@
           <th>產品名稱</th>
           <th width="120">原價</th>
           <th width="120">售價</th>
-          <th width="100">是否啟用</th>
+          <th width="120">是否啟用</th>
           <th width="200">編輯</th>
         </tr>
       </thead>
@@ -28,8 +28,20 @@
             {{ item.price }}
           </td>
           <td>
-            <span v-if="item.is_enabled" class="text-success">啟用</span>
-            <span v-else>未啟用</span>
+            <div class="form-check form-switch">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                :id="item.id"
+                :checked="item.is_enabled ? true : false"
+                :disabled="isLoading"
+                @change="updateProductStatus(item)"
+              />
+              <label class="form-check-label" :for="item.id">
+                <span v-if="item.is_enabled" class="text-success">啟用</span>
+                <span v-else class="text-danger">未啟用</span>
+              </label>
+            </div>
           </td>
           <td>
             <div class="btn-group">
@@ -123,7 +135,7 @@ export default {
         });
     },
     updateProduct(item) {
-      this.tempProduct = item;
+      this.tempProduct = { ...item };
       let api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/product`;
       let httpMethod = 'post';
       let status = '新增產品';
@@ -133,6 +145,23 @@ export default {
         status = '更新產品';
       }
       this.$http[httpMethod](api, { data: this.tempProduct }).then((response) => {
+        if (response.data.success) {
+          this.$httpMessageState(response, status);
+          this.productModal.hideModal();
+          this.getProducts(this.currentPage);
+        } else {
+          this.$httpMessageState(response, status);
+        }
+      });
+    },
+    updateProductStatus(item) {
+      this.tempProduct = { ...item };
+      // 狀態反向
+      this.tempProduct.is_enabled = this.tempProduct.is_enabled ? 0 : 1;
+      const api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/product/${this.tempProduct.id}`;
+      const status = '更新產品';
+      this.isLoading = true;
+      this.$http.put(api, { data: this.tempProduct }).then((response) => {
         if (response.data.success) {
           this.$httpMessageState(response, status);
           this.productModal.hideModal();
