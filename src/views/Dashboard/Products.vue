@@ -83,13 +83,13 @@
     :isNew="isNew"
     :sell-status-options="sellStatusOptions"
   ></ProductModal>
-  <!-- DelProductModal -->
-  <DelProductModal ref="delModal" :item="tempProduct" @del-item="delProduct"></DelProductModal>
+  <!-- DelModal -->
+  <DelModal ref="delModal" :item="tempProduct" @del-item="delProduct"></DelModal>
 </template>
 <script>
 import Pagination from '@/components/Pagination.vue';
 import ProductModal from '@/components/ProductModal.vue';
-import DelProductModal from '@/components/DelProductModal.vue';
+import DelModal from '@/components/DelModal.vue';
 
 export default {
   data() {
@@ -113,7 +113,7 @@ export default {
   components: {
     Pagination,
     ProductModal,
-    DelProductModal,
+    DelModal,
   },
   methods: {
     getProducts(page = 1) {

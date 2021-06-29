@@ -68,9 +68,11 @@
       <Pagination :pages="pagination" @get-products="getOrders"></Pagination>
     </div>
   </div>
+  <DelModal ref="delModal" :item="tempOrder" @del-item="delOrder"></DelModal>
 </template>
 <script>
 import Pagination from '@/components/Pagination.vue';
+import DelModal from '@/components/DelModal.vue';
 
 export default {
   data() {
@@ -82,7 +84,7 @@ export default {
       isLoading: false,
     };
   },
-  components: { Pagination },
+  components: { Pagination, DelModal },
   methods: {
     getOrders(page = 1) {
       this.currentPage = page;
@@ -93,6 +95,24 @@ export default {
         this.pagination = res.data.pagination;
         this.isLoading = false;
       });
+    },
+    delOrder() {
+      const url = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/order/${this.tempOrder.id}`;
+      this.isLoading = true;
+      this.$http.delete(url).then((res) => {
+        if (res.data.success) {
+          this.$httpMessageState(res, '刪除訂單');
+          this.$refs.delModal.hideModal();
+          this.getOrders(this.currentPage);
+        } else {
+          this.$httpMessageState(res, '刪除訂單');
+          this.isLoading = false;
+        }
+      });
+    },
+    openDelOrderModal(item) {
+      this.tempOrder = { ...item };
+      this.$refs.delModal.openModal();
     },
   },
   created() {
