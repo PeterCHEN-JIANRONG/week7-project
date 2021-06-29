@@ -39,15 +39,25 @@
       </Form>
     </div>
   </div>
+  <ToastMessages></ToastMessages>
 </template>
 
 <script>
+import emitter from '@/methods/eventBus';
+import ToastMessages from '@/components/ToastMessages.vue';
+
 export default {
   data() {
     return {
       user: {},
     };
   },
+  provide() {
+    return {
+      emitter,
+    };
+  },
+  components: { ToastMessages },
   methods: {
     signIn() {
       const url = `${process.env.VUE_APP_API}/admin/signin`;
@@ -57,11 +67,7 @@ export default {
           document.cookie = `hexToken=${token};expires=${new Date(expired)};`;
           this.$router.push('/admin/products');
         } else {
-          this.$swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: response.data.message,
-          });
+          this.$httpMessageState(response, '登入');
         }
       });
     },

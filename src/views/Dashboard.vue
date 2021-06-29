@@ -51,9 +51,9 @@ export default {
         this.$http.post(url, { api_token: token }).then((res) => {
           if (res.data.success) {
             this.checkSuccess = true;
+            this.$httpMessageState(res, '登入');
           } else {
             this.checkSuccess = false;
-            this.successAlert(res.data.message);
             this.$router.push('/login');
           }
         });
