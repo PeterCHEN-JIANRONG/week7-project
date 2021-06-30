@@ -43,10 +43,12 @@
       <Pagination :pages="pagination" @get-products="getCoupons"></Pagination>
     </div>
   </div>
+  <DelModal ref="delModal" :item="tempCoupons" @del-item="delCoupons"></DelModal>
 </template>
 
 <script>
 import Pagination from '@/components/Pagination.vue';
+import DelModal from '@/components/DelModal.vue';
 
 export default {
   data() {
@@ -64,7 +66,7 @@ export default {
       isNew: false,
     };
   },
-  components: { Pagination },
+  components: { Pagination, DelModal },
   methods: {
     getCoupons(page = 1) {
       this.currentPage = page;
@@ -75,6 +77,27 @@ export default {
         this.pagination = res.data.pagination;
         this.isLoading = false;
       });
+    },
+    delCoupons(item) {
+      this.isLoading = true;
+      const url = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/coupon/${item.id}`;
+      this.$http.delete(url).then((res) => {
+        if (res.data.success) {
+          this.$httpMessageState(res, '刪除優惠券');
+          this.$refs.delModal.hideModal();
+          this.getCoupons(this.currentPage);
+        } else {
+          this.$httpMessageState(res, '刪除優惠券');
+          this.isLoading = false;
+        }
+      });
+    },
+    openCouponModal(item) {
+      console.log(item);
+    },
+    openDelCouponModal(item) {
+      this.tempCoupons = { ...item };
+      this.$refs.delModal.openModal();
     },
   },
   created() {

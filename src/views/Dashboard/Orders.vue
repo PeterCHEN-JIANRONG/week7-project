@@ -115,9 +115,9 @@ export default {
         }
       });
     },
-    delOrder() {
+    delOrder(item) {
       this.isLoading = true;
-      const url = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/order/${this.tempOrder.id}`;
+      const url = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/order/${item.id}`;
       this.$http.delete(url).then((res) => {
         if (res.data.success) {
           this.$httpMessageState(res, '刪除訂單');
