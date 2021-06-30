@@ -1,7 +1,7 @@
 <template>
+  <Loading :active="isLoading" :z-index="1060"></Loading>
   <div class="container">
     <h1>訂單管理列表</h1>
-    <Loading :active="isLoading" :z-index="1060"></Loading>
     <table class="table mt-4">
       <thead>
         <tr>
@@ -68,11 +68,13 @@
       <Pagination :pages="pagination" @get-products="getOrders"></Pagination>
     </div>
   </div>
+  <OrderModal ref="orderModal" :order="tempOrder" @update-paid="updatePaid"></OrderModal>
   <DelModal ref="delModal" :item="tempOrder" @del-item="delOrder"></DelModal>
 </template>
 <script>
 import Pagination from '@/components/Pagination.vue';
 import DelModal from '@/components/DelModal.vue';
+import OrderModal from '@/components/OrderModal.vue';
 
 export default {
   data() {
@@ -84,7 +86,7 @@ export default {
       isLoading: false,
     };
   },
-  components: { Pagination, DelModal },
+  components: { Pagination, DelModal, OrderModal },
   methods: {
     getOrders(page = 1) {
       this.currentPage = page;
@@ -104,7 +106,7 @@ export default {
       };
       this.$http.put(url, { data: paid }).then((res) => {
         if (res.data.success) {
-          this.$refs.delModal.hideModal();
+          this.$refs.orderModal.hideModal();
           this.getOrders(this.currentPage);
           this.$httpMessageState(res, '更新付款狀態');
         } else {
@@ -126,6 +128,10 @@ export default {
           this.isLoading = false;
         }
       });
+    },
+    openModal(item) {
+      this.tempOrder = { ...item };
+      this.$refs.orderModal.openModal();
     },
     openDelOrderModal(item) {
       this.tempOrder = { ...item };
