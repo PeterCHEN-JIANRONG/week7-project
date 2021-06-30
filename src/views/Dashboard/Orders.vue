@@ -96,9 +96,26 @@ export default {
         this.isLoading = false;
       });
     },
-    delOrder() {
-      const url = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/order/${this.tempOrder.id}`;
+    updatePaid(item) {
       this.isLoading = true;
+      const url = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/order/${item.id}`;
+      const paid = {
+        is_paid: item.is_paid,
+      };
+      this.$http.put(url, { data: paid }).then((res) => {
+        if (res.data.success) {
+          this.$refs.delModal.hideModal();
+          this.getOrders(this.currentPage);
+          this.$httpMessageState(res, '更新付款狀態');
+        } else {
+          this.$httpMessageState(res, '更新付款狀態');
+          this.isLoading = false;
+        }
+      });
+    },
+    delOrder() {
+      this.isLoading = true;
+      const url = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/order/${this.tempOrder.id}`;
       this.$http.delete(url).then((res) => {
         if (res.data.success) {
           this.$httpMessageState(res, '刪除訂單');
