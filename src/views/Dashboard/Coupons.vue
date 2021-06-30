@@ -43,18 +43,25 @@
       <Pagination :pages="pagination" @get-products="getCoupons"></Pagination>
     </div>
   </div>
-  <DelModal ref="delModal" :item="tempCoupons" @del-item="delCoupons"></DelModal>
+  <CouponModal
+    ref="couponModal"
+    :coupon="tempCoupon"
+    :is_new="isNew"
+    @update-coupon="updateCoupon"
+  ></CouponModal>
+  <DelModal ref="delModal" :item="tempCoupon" @del-item="delCoupons"></DelModal>
 </template>
 
 <script>
 import Pagination from '@/components/Pagination.vue';
 import DelModal from '@/components/DelModal.vue';
+import CouponModal from '@/components/CouponModal.vue';
 
 export default {
   data() {
     return {
       coupons: {},
-      tempCoupons: {
+      tempCoupon: {
         title: '',
         is_enabled: 0,
         percent: 100,
@@ -66,7 +73,7 @@ export default {
       isNew: false,
     };
   },
-  components: { Pagination, DelModal },
+  components: { Pagination, DelModal, CouponModal },
   methods: {
     getCoupons(page = 1) {
       this.currentPage = page;
@@ -75,6 +82,30 @@ export default {
       this.$http.get(url).then((res) => {
         this.coupons = res.data.coupons;
         this.pagination = res.data.pagination;
+        this.isLoading = false;
+      });
+    },
+    updateCoupon(item) {
+      console.log(item);
+      this.isLoading = true;
+      // 新增
+      let url = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/coupon`;
+      let method = 'post';
+      let option = '新增優惠券';
+      if (!this.isNew) {
+        // 修改
+        url = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/coupon/${item.id}`;
+        method = 'put';
+        option = '更新優惠券';
+      }
+      this.$http[method](url, { data: item }).then((res) => {
+        if (res.data.success) {
+          this.$httpMessageState(res, option);
+          this.getCoupons();
+          this.$refs.couponModal.hideModal();
+        } else {
+          this.$httpMessageState(res, option);
+        }
         this.isLoading = false;
       });
     },
@@ -92,11 +123,20 @@ export default {
         }
       });
     },
-    openCouponModal(item) {
-      console.log(item);
+    openCouponModal(isNew, item) {
+      this.isNew = isNew;
+      if (isNew) {
+        this.tempCoupon = {
+          is_enabled: 0,
+          due_date: Math.floor(new Date().getTime() / 1000),
+        };
+      } else {
+        this.tempCoupon = { ...item };
+      }
+      this.$refs.couponModal.openModal();
     },
     openDelCouponModal(item) {
-      this.tempCoupons = { ...item };
+      this.tempCoupon = { ...item };
       this.$refs.delModal.openModal();
     },
   },
