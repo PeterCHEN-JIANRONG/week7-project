@@ -86,7 +86,6 @@ export default {
       });
     },
     updateCoupon(item) {
-      console.log(item);
       this.isLoading = true;
       // 新增
       let url = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/coupon`;
@@ -99,27 +98,23 @@ export default {
         option = '更新優惠券';
       }
       this.$http[method](url, { data: item }).then((res) => {
+        this.$httpMessageState(res, option);
+        this.isLoading = false;
         if (res.data.success) {
-          this.$httpMessageState(res, option);
           this.getCoupons();
           this.$refs.couponModal.hideModal();
-        } else {
-          this.$httpMessageState(res, option);
         }
-        this.isLoading = false;
       });
     },
     delCoupons(item) {
       this.isLoading = true;
       const url = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/coupon/${item.id}`;
       this.$http.delete(url).then((res) => {
+        this.$httpMessageState(res, '刪除優惠券');
+        this.isLoading = false;
         if (res.data.success) {
-          this.$httpMessageState(res, '刪除優惠券');
           this.$refs.delModal.hideModal();
           this.getCoupons(this.currentPage);
-        } else {
-          this.$httpMessageState(res, '刪除優惠券');
-          this.isLoading = false;
         }
       });
     },
