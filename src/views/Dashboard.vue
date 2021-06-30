@@ -11,7 +11,9 @@
             <router-link class="nav-link" to="/admin/orders">訂單管理</router-link>
           </li>
           <li class="nav-item">
-            <!-- <router-link class="nav-link" to="/admin/products">登出</router-link> -->
+            <router-link class="nav-link" to="/admin/coupons">優惠券</router-link>
+          </li>
+          <li class="nav-item">
             <a href="#" class="nav-link" @click.prevent="signOut">登出</a>
           </li>
           <li class="nav-item">
