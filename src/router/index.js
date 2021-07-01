@@ -59,6 +59,11 @@ const routes = [
         name: '優惠券',
         component: () => import('../views/Dashboard/Coupons.vue'),
       },
+      {
+        path: 'articles',
+        name: '貼文',
+        component: () => import('../views/Dashboard/Articles.vue'),
+      },
     ],
   },
   {
