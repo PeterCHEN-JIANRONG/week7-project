@@ -24,7 +24,7 @@
           <Field
             id="password"
             name="密碼"
-            type="text"
+            type="password"
             placeholder="請輸入密碼"
             class="form-control"
             :class="{ 'is-invalid': errors['密碼'] }"

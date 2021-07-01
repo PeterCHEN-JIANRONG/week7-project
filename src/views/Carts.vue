@@ -274,6 +274,7 @@ export default {
             this.getCart();
             // 清空表單資料
             this.$refs.form.resetForm();
+            this.form.message = '';
             this.successAlert(res.data.message);
           } else {
             this.errorAlert(res.data.message);

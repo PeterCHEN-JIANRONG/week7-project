@@ -63,6 +63,7 @@ const routes = [
   },
   {
     path: '/:pathMatch(.*)*',
+    name: '404頁',
     component: import('../views/NotFound.vue'),
   },
 ];
