@@ -23,8 +23,21 @@
           <td>{{ item.percent }}%</td>
           <td>{{ $filters.date(item.due_date) }}</td>
           <td>
-            <span v-if="item.is_enabled === 1" class="text-success">啟用</span>
-            <span v-else class="text-muted">未啟用</span>
+            <div class="form-check form-switch">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                :id="`enableSwitch${item.id}`"
+                :true-value="1"
+                :false-value="0"
+                v-model="item.is_enabled"
+                @change="updateCouponStatus(item)"
+              />
+              <label class="form-check-label" :for="`enableSwitch${item.id}`">
+                <span v-if="item.is_enabled === 1" class="text-success">啟用</span>
+                <span v-else class="text-muted">未啟用</span>
+              </label>
+            </div>
           </td>
           <td>
             <div class="btn-group">
@@ -117,6 +130,11 @@ export default {
           this.getCoupons(this.currentPage);
         }
       });
+    },
+    updateCouponStatus(item) {
+      this.isNew = false;
+      this.tempCoupon = { ...item };
+      this.updateCoupon(this.tempCoupon);
     },
     openCouponModal(isNew, item) {
       this.isNew = isNew;
