@@ -61,13 +61,8 @@
 
   <!-- vue-loading -->
   <Loading :active="isLoading"></Loading>
-
-  <!-- modal -->
-  <ProductModal ref="productModalA" :product="product" @add-to-cart="addCart"></ProductModal>
 </template>
 <script>
-import ProductModal from '@/components/ProductModal.vue';
-
 export default {
   data() {
     return {
@@ -78,9 +73,6 @@ export default {
         loadingItem: '',
       },
     };
-  },
-  components: {
-    ProductModal,
   },
   methods: {
     getProducts(page = 1) {
@@ -103,22 +95,6 @@ export default {
     pushProductPage(item) {
       this.$router.push(`/product/${item.id}`);
     },
-    openProductModal(item) {
-      const url = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/product/${item.id}`;
-      this.$http
-        .get(url)
-        .then((res) => {
-          if (res.data.success) {
-            this.product = res.data.product;
-            this.$refs.productModalA.openModal();
-          } else {
-            this.errorAlert(res.data.message);
-          }
-        })
-        .catch((error) => {
-          console.dir(error);
-        });
-    },
     addCart(id, qty = 1) {
       this.isLoading = true;
       this.loadingStatus.loadingItem = id;
@@ -130,34 +106,15 @@ export default {
       this.$http
         .post(url, { data })
         .then((res) => {
+          this.$httpMessageState(res, res.data.message);
           if (res.data.success) {
-            // this.$refs.productModalA.hideModal();
             this.isLoading = false;
             this.loadingStatus.loadingItem = '';
-            this.successAlert(res.data.message);
-          } else {
-            this.errorAlert(res.data.message);
           }
         })
         .catch((error) => {
           console.dir(error);
         });
-    },
-    successAlert(msg) {
-      this.$swal.fire({
-        // position: 'top-end',
-        icon: 'success',
-        title: msg,
-        showConfirmButton: false,
-        timer: 1500,
-      });
-    },
-    errorAlert(msg) {
-      this.$swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: msg,
-      });
     },
   },
   created() {

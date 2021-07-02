@@ -57,11 +57,7 @@ export default {
           if (res.data.success) {
             this.product = res.data.product;
           } else {
-            this.$swal.fire({
-              icon: 'error',
-              title: 'Oops...',
-              text: res.data.message,
-            });
+            this.$httpMessageState(res, res.data.message);
           }
           this.isLoading = false;
         })
@@ -79,23 +75,11 @@ export default {
       this.$http
         .post(url, { data })
         .then((res) => {
+          this.$httpMessageState(res, res.data.message);
+          this.isLoading = false;
           if (res.data.success) {
-            this.$swal.fire({
-              // position: 'top',
-              icon: 'success',
-              title: res.data.message,
-              showConfirmButton: false,
-              timer: 1500,
-            });
             this.qty = 1;
-            this.isLoading = false;
             // this.$router.push('/products');
-          } else {
-            this.$swal.fire({
-              icon: 'error',
-              title: 'Oops...',
-              text: res.data.message,
-            });
           }
         })
         .catch((error) => {

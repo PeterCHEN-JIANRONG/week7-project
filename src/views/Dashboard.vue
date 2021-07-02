@@ -19,7 +19,7 @@
         </ul>
         <ul class="navbar-nav ms-auto">
           <li class="nav-item">
-            <router-link class="nav-link" to="/">前台</router-link>
+            <router-link class="nav-link" to="/index">前台</router-link>
           </li>
           <li class="nav-item">
             <a href="#" class="nav-link" @click.prevent="signOut">登出</a>

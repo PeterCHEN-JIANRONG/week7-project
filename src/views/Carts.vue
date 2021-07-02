@@ -198,12 +198,12 @@ export default {
       this.$http
         .get(url)
         .then((res) => {
+          this.isLoading = false;
           if (res.data.success) {
             this.cart = res.data.data;
           } else {
-            this.errorAlert(res.data.message);
+            this.$httpMessageState(res, res.data.message);
           }
-          this.isLoading = false;
         })
         .catch((error) => {
           console.dir(error);
@@ -220,12 +220,12 @@ export default {
       this.$http
         .put(url, { data })
         .then((res) => {
+          this.isLoading = false;
+          this.loadingStatus.loadingItem = '';
+          this.$httpMessageState(res, res.data.message);
           if (res.data.success) {
             this.getCart();
-            this.loadingStatus.loadingItem = '';
           }
-          this.isLoading = false;
-          this.successAlert(res.data.message);
         })
         .catch((error) => {
           console.dir(error);
@@ -237,11 +237,11 @@ export default {
       this.$http
         .delete(url)
         .then((res) => {
+          this.isLoading = false;
+          this.$httpMessageState(res, res.data.message);
           if (res.data.success) {
             this.getCart();
           }
-          this.isLoading = false;
-          this.successAlert(res.data.message);
         })
         .catch((error) => {
           console.dir(error);
@@ -253,11 +253,11 @@ export default {
       this.$http
         .delete(url)
         .then((res) => {
+          this.isLoading = false;
+          this.$httpMessageState(res, res.data.message);
           if (res.data.success) {
             this.getCart();
           }
-          this.successAlert(res.data.message);
-          this.isLoading = false;
         })
         .catch((error) => {
           console.dir(error);
@@ -270,36 +270,18 @@ export default {
       this.$http
         .post(url, { data: order })
         .then((res) => {
+          this.isLoading = false;
+          this.$httpMessageState(res, res.data.message);
           if (res.data.success) {
             this.getCart();
             // 清空表單資料
             this.$refs.form.resetForm();
             this.form.message = '';
-            this.successAlert(res.data.message);
-          } else {
-            this.errorAlert(res.data.message);
           }
-          this.isLoading = false;
         })
         .catch((error) => {
           console.dir(error);
         });
-    },
-    successAlert(msg) {
-      this.$swal.fire({
-        // position: 'top-end',
-        icon: 'success',
-        title: msg,
-        showConfirmButton: false,
-        timer: 1500,
-      });
-    },
-    errorAlert(msg) {
-      this.$swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: msg,
-      });
     },
   },
   watch: {

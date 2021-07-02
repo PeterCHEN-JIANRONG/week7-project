@@ -144,13 +144,13 @@ export default {
         httpMethod = 'put';
         status = '更新產品';
       }
-      this.$http[httpMethod](api, { data: this.tempProduct }).then((response) => {
-        if (response.data.success) {
-          this.$httpMessageState(response, status);
+      this.$http[httpMethod](api, { data: this.tempProduct }).then((res) => {
+        if (res.data.success) {
+          this.$httpMessageState(res, status);
           this.productModal.hideModal();
           this.getProducts(this.currentPage);
         } else {
-          this.$httpMessageState(response, status);
+          this.$httpMessageState(res, status);
         }
       });
     },
