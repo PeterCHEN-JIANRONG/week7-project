@@ -153,7 +153,30 @@ export default {
           });
         });
     },
-    delArticle() {},
+    delArticle(item) {
+      const api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/article/${item.id}`;
+      this.isLoading = true;
+      this.$http
+        .delete(api)
+        .then((res) => {
+          this.isLoading = false;
+          this.$httpMessageState(res, res.data.message);
+          if (res.data.success) {
+            this.$refs.delModal.hideModal();
+            this.getArticles(this.currentPage);
+          }
+        })
+        .catch((error) => {
+          // axios 的錯誤狀態，可參考：https://github.com/axios/axios#handling-errors
+          console.log('error', error.response, error.request, error.message);
+          this.isLoading = false;
+          this.emitter.emit('push-message', {
+            title: '連線錯誤',
+            style: 'danger',
+            content: error.message,
+          });
+        });
+    },
     openArticleModal(isNew, item) {
       if (isNew) {
         this.tempArticle = {
