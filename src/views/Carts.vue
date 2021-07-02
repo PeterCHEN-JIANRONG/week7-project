@@ -80,6 +80,19 @@
             </tr>
           </tfoot>
         </table>
+        <div class="input-group mb-3 input-group-sm">
+          <input
+            type="text"
+            class="form-control"
+            v-model="coupon_code"
+            placeholder="請輸入優惠碼"
+          />
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button" @click="addCouponCode">
+              套用優惠碼
+            </button>
+          </div>
+        </div>
       </div>
     </div>
     <!-- 表單送出 -->
@@ -189,6 +202,7 @@ export default {
         loadingItem: '',
       },
       isLoading: false,
+      coupon_code: '',
     };
   },
   methods: {
@@ -282,6 +296,22 @@ export default {
         .catch((error) => {
           console.dir(error);
         });
+    },
+    addCouponCode() {
+      const data = {
+        code: this.coupon_code,
+      };
+      this.isLoading = true;
+      const url = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/coupon`;
+      this.$http.post(url, { data }).then((res) => {
+        this.isLoading = false;
+        if (res.data.success) {
+          this.$httpMessageState(res, '套用優惠券');
+          this.getCart();
+        } else {
+          this.$httpMessageState(res, res.data.message);
+        }
+      });
     },
   },
   watch: {
