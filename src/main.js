@@ -5,6 +5,7 @@ import VueSweetalert2 from 'vue-sweetalert2';
 import '../node_modules/sweetalert2/dist/sweetalert2.min.css';
 import Loading from 'vue3-loading-overlay';
 import 'vue3-loading-overlay/dist/vue3-loading-overlay.css';
+import CKEditor from '@ckeditor/ckeditor5-vue';
 
 // 匯入 vee-validate 主套件
 import {
@@ -51,6 +52,7 @@ app.config.globalProperties.$httpMessageState = $httpMessageState;
 app.use(VueAxios, axios);
 app.use(VueSweetalert2);
 app.use(router);
+app.use(CKEditor);
 
 app.component('Form', Form);
 app.component('Field', Field);

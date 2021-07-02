@@ -2,7 +2,7 @@
   <div class="container">
     <Loading :active="isLoading" :z-index="1060"></Loading>
     <div class="text-end mt-4">
-      <button class="btn btn-primary" type="button" @click="openModal(true)">
+      <button class="btn btn-primary" type="button" @click="openArticleModal(true)">
         建立新的頁面
       </button>
     </div>
@@ -49,28 +49,31 @@
       </tbody>
     </table>
   </div>
+  <ArticleModal
+    ref="articleModal"
+    :article="tempArticle"
+    :is_new="isNew"
+    @update-article="updateArticle"
+  ></ArticleModal>
+  <DelModal ref="delModal" :item="tempArticle" @del-item="delArticle"></DelModal>
 </template>
-
 <script>
+import ArticleModal from '@/components/ArticleModal.vue';
+import DelModal from '@/components/DelModal.vue';
+
 export default {
-  props: {
-    article: {
-      type: Object,
-      default() {
-        return {};
-      },
-    },
-  },
   data() {
     return {
       articles: [],
       tempArticle: {},
-      isLoading: false,
-      isNew: false,
       pagination: {},
       currentPage: 1,
+      isLoading: false,
+      isNew: false,
     };
   },
+  inject: ['emitter'],
+  components: { ArticleModal, DelModal },
   methods: {
     getArticles(page = 1) {
       this.currentPage = page;
@@ -78,11 +81,11 @@ export default {
       this.isLoading = true;
       this.$http
         .get(api)
-        .then((response) => {
+        .then((res) => {
           this.isLoading = false;
-          if (response.data.success) {
-            this.articles = response.data.articles;
-            this.pagination = response.data.pagination;
+          if (res.data.success) {
+            this.articles = res.data.articles;
+            this.pagination = res.data.pagination;
           }
         })
         .catch((error) => {
@@ -95,6 +98,79 @@ export default {
             content: error.message,
           });
         });
+    },
+    getArticle(id) {
+      const api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/article/${id}`;
+      this.isLoading = true;
+      this.$http
+        .get(api)
+        .then((res) => {
+          this.isLoading = false;
+          if (res.data.success) {
+            this.openArticleModal(false, res.data.article);
+          }
+        })
+        .catch((error) => {
+          // axios 的錯誤狀態，可參考：https://github.com/axios/axios#handling-errors
+          console.log('error', error.response, error.request, error.message);
+          this.isLoading = false;
+          this.emitter.emit('push-message', {
+            title: '連線錯誤',
+            style: 'danger',
+            content: error.message,
+          });
+        });
+    },
+    updateArticle(item) {
+      // 新增
+      let api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/article`;
+      let httpMethod = 'post';
+      let status = '新增貼文';
+      // 更新
+      if (!this.isNew) {
+        api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/article/${item.id}`;
+        httpMethod = 'put';
+        status = '更新貼文';
+      }
+      this.isLoading = true;
+      this.$http[httpMethod](api, { data: item })
+        .then((res) => {
+          this.isLoading = false;
+          this.$httpMessageState(res, status);
+          if (res.data.success) {
+            this.$refs.articleModal.hideModal();
+            this.getArticles(this.currentPage);
+          }
+        })
+        .catch((error) => {
+          // axios 的錯誤狀態，可參考：https://github.com/axios/axios#handling-errors
+          console.log('error', error.response, error.request, error.message);
+          this.isLoading = false;
+          this.emitter.emit('push-message', {
+            title: '連線錯誤',
+            style: 'danger',
+            content: error.message,
+          });
+        });
+    },
+    delArticle() {},
+    openArticleModal(isNew, item) {
+      if (isNew) {
+        this.tempArticle = {
+          isPublic: false,
+          create_at: new Date().getTime() / 1000,
+          tag: [],
+        };
+        this.isNew = true;
+      } else {
+        this.tempArticle = { ...item };
+        this.isNew = false;
+      }
+      this.$refs.articleModal.openModal();
+    },
+    openDelArticleModal(item) {
+      this.tempArticle = { ...item };
+      this.$refs.delModal.openModal();
     },
   },
   created() {

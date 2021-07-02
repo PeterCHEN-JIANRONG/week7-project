@@ -45,6 +45,7 @@ export default {
     item: {},
   },
   mixins: [modalMixin],
+  emits: ['del-item'],
   data() {
     return {
       modal: null,
