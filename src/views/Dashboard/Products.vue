@@ -22,10 +22,10 @@
           <td>{{ item.category }}</td>
           <td>{{ item.title }}</td>
           <td class="text-right">
-            {{ item.origin_price }}
+            {{ $filters.currency(item.origin_price) }}
           </td>
           <td class="text-right">
-            {{ item.price }}
+            {{ $filters.currency(item.price) }}
           </td>
           <td>
             <div class="form-check form-switch">

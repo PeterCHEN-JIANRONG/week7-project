@@ -64,7 +64,7 @@
                   <small v-if="cart.final_total !== cart.total" class="text-success"
                     >折扣價：</small
                   >
-                  {{ toThousand(item.final_total) }}
+                  {{ $filters.currency(item.final_total) }}
                 </td>
               </tr>
             </template>
@@ -72,11 +72,11 @@
           <tfoot>
             <tr>
               <td colspan="3" class="text-end">總計</td>
-              <td class="text-end">{{ toThousand(cart.total) }}</td>
+              <td class="text-end">{{ $filters.currency(cart.total) }}</td>
             </tr>
             <tr v-if="cart.final_total !== cart.total">
               <td colspan="3" class="text-end text-success">折扣價</td>
-              <td class="text-end text-success">{{ toThousand(cart.final_total) }}</td>
+              <td class="text-end text-success">{{ $filters.currency(cart.final_total) }}</td>
             </tr>
           </tfoot>
         </table>
@@ -284,12 +284,6 @@ export default {
         .catch((error) => {
           console.dir(error);
         });
-    },
-    toThousand(num) {
-      // 千分位
-      const temp = num.toString().split('.');
-      temp[0] = temp[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-      return temp.join('.');
     },
     successAlert(msg) {
       this.$swal.fire({

@@ -11,9 +11,13 @@
         <span class="badge bg-primary rounded-pill">{{ product.category }}</span>
         <p>商品描述：{{ product.description }}</p>
         <p>商品內容：{{ product.content }}</p>
-        <div class="h5" v-if="!product.price">{{ toThousand(product.origin_price) }} 元</div>
-        <del class="h6" v-if="product.price">原價 {{ toThousand(product.origin_price) }} 元</del>
-        <div class="h5" v-if="product.price">現在只要 {{ toThousand(product.price) }} 元</div>
+        <div class="h5" v-if="!product.price">{{ $filters.currency(product.origin_price) }} 元</div>
+        <del class="h6" v-if="product.price"
+          >原價 {{ $filters.currency(product.origin_price) }} 元</del
+        >
+        <div class="h5" v-if="product.price">
+          現在只要 {{ $filters.currency(product.price) }} 元
+        </div>
         <div>
           <div class="input-group">
             <input type="number" class="form-control" v-model.number="qty" min="1" />
@@ -97,12 +101,6 @@ export default {
         .catch((error) => {
           console.dir(error);
         });
-    },
-    toThousand(num) {
-      // 千分位
-      const temp = num.toString().split('.');
-      temp[0] = temp[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-      return temp.join('.');
     },
   },
   created() {

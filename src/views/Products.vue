@@ -26,8 +26,12 @@
             </td>
             <td>
               <div class="h5" v-if="!item.price">{{ item.origin_price }} 元</div>
-              <del class="h6" v-if="item.price">原價 {{ toThousand(item.origin_price) }} 元</del>
-              <div class="h5" v-if="item.price">現在只要 {{ toThousand(item.price) }} 元</div>
+              <del class="h6" v-if="item.price"
+                >原價 {{ $filters.currency(item.origin_price) }} 元</del
+              >
+              <div class="h5" v-if="item.price">
+                現在只要 {{ $filters.currency(item.price) }} 元
+              </div>
             </td>
             <td>
               <div class="btn-group btn-group-sm">
@@ -138,12 +142,6 @@ export default {
         .catch((error) => {
           console.dir(error);
         });
-    },
-    toThousand(num) {
-      // 千分位
-      const temp = num.toString().split('.');
-      temp[0] = temp[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-      return temp.join('.');
     },
     successAlert(msg) {
       this.$swal.fire({
