@@ -17,6 +17,9 @@
             <router-link class="nav-link" to="/carts">購物車</router-link>
           </li>
           <li class="nav-item">
+            <router-link class="nav-link" to="/articles">部落格</router-link>
+          </li>
+          <li class="nav-item">
             <router-link class="nav-link" to="/admin/products">後台</router-link>
           </li>
         </ul>

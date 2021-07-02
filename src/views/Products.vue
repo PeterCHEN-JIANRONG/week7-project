@@ -57,32 +57,42 @@
         </tbody>
       </table>
     </div>
+    <div class="d-flex justify-content-center">
+      <Pagination :pages="pagination" @get-products="getProducts"></Pagination>
+    </div>
   </div>
 
   <!-- vue-loading -->
   <Loading :active="isLoading"></Loading>
 </template>
 <script>
+import Pagination from '@/components/Pagination.vue';
+
 export default {
   data() {
     return {
       products: [],
       product: {},
+      pagination: {},
+      currentPage: 1,
       isLoading: false,
       loadingStatus: {
         loadingItem: '',
       },
     };
   },
+  components: { Pagination },
   methods: {
     getProducts(page = 1) {
       this.isLoading = true;
+      this.currentPage = page;
       const url = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/products?page=${page}`;
       this.$http
         .get(url)
         .then((res) => {
           if (res.data.success) {
             this.products = res.data.products;
+            this.pagination = res.data.pagination;
           } else {
             this.errorAlert(res.data.message);
           }

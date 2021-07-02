@@ -11,6 +11,11 @@ const routes = [
         component: () => import('../views/Index.vue'),
       },
       {
+        path: 'about',
+        name: '關於我們',
+        component: () => import('../views/About.vue'),
+      },
+      {
         path: 'products',
         name: '產品列表',
         component: () => import('../views/Products.vue'),
@@ -29,9 +34,14 @@ const routes = [
         component: () => import('../views/Carts.vue'),
       },
       {
-        path: 'about',
-        name: '關於我們',
-        component: () => import('../views/About.vue'),
+        path: 'articles',
+        name: '部落格列表',
+        component: () => import('../views/Articles.vue'),
+      },
+      {
+        path: 'article/:articleId',
+        name: '部落格頁',
+        component: () => import('../views/Article.vue'),
       },
     ],
   },
