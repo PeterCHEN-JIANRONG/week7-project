@@ -1,10 +1,11 @@
 # week7-project
 
-使用Vue Cli、NPM、元件化，開發電商網站前、後台
+使用 Vue Cli、NPM、元件化，開發電商網站前、後台
 
 # 頁面
 
 - [前台頁](https://peterchen-jianrong.github.io/week7-project/dist/#/products)
+- [後台頁](https://peterchen-jianrong.github.io/week7-project/dist/#/admin/products)
 
 ### 說明
 
