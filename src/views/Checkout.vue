@@ -51,7 +51,7 @@
         </tbody>
       </table>
       <div class="text-end" v-if="order.is_paid === false">
-        <button class="btn btn-danger">確認付款去</button>
+        <button type="submit" class="btn btn-danger">確認付款去</button>
       </div>
     </form>
   </div>
@@ -78,6 +78,32 @@ export default {
           this.isLoading = false;
           if (res.data.success) {
             this.order = res.data.order;
+          } else {
+            this.$httpMessageState(res, res.data.message);
+          }
+        })
+        .catch((error) => {
+          // axios 的錯誤狀態，可參考：https://github.com/axios/axios#handling-errors
+          console.log('error', error.response, error.request, error.message);
+          this.isLoading = false;
+          this.emitter.emit('push-message', {
+            title: '連線錯誤',
+            style: 'danger',
+            content: error.message,
+          });
+        });
+    },
+    payOrder() {
+      this.isLoading = true;
+      const api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/pay/${this.orderId}`;
+      this.$http
+        .post(api)
+        .then((res) => {
+          this.isLoading = false;
+          if (res.data.success) {
+            this.getOrder();
+          } else {
+            this.$httpMessageState(res, res.data.message);
           }
         })
         .catch((error) => {
