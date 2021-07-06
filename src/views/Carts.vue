@@ -285,9 +285,9 @@ export default {
         .post(url, { data: order })
         .then((res) => {
           this.isLoading = false;
-          this.$httpMessageState(res, res.data.message);
+          this.$httpMessageState(res, '建立訂單');
           if (res.data.success) {
-            this.getCart();
+            this.$router.push(`/checkout/${res.data.orderId}`);
             // 清空表單資料
             this.$refs.form.resetForm();
             this.form.message = '';

@@ -34,6 +34,11 @@ const routes = [
         component: () => import('../views/Carts.vue'),
       },
       {
+        path: 'checkout/:orderId',
+        name: '結帳頁',
+        component: () => import('../views/Checkout.vue'),
+      },
+      {
         path: 'articles',
         name: '部落格列表',
         component: () => import('../views/Articles.vue'),
