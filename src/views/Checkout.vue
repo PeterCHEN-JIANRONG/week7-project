@@ -1,7 +1,10 @@
 <template>
   <Loading :active="isLoading" :z-index="1060"></Loading>
   <div class="my-5 row justify-content-center">
-    <form class="col-md-6" @submit.prevent="payOrder">
+    <div class="col-md-6" v-if="!hasOrder">
+      <p class="text-center h1">查無訂單編號</p>
+    </div>
+    <form class="col-md-6" @submit.prevent="payOrder" v-else>
       <table class="table align-middle">
         <thead>
           <th>品名</th>
@@ -66,6 +69,7 @@ export default {
       },
       orderId: '',
       isLoading: false,
+      hasOrder: false,
     };
   },
   methods: {
@@ -76,8 +80,17 @@ export default {
         .get(api)
         .then((res) => {
           this.isLoading = false;
+          console.log(res.data);
           if (res.data.success) {
-            this.order = res.data.order;
+            if (res.data.order === null) {
+              this.hasOrder = false;
+              this.order = {
+                user: {},
+              };
+            } else {
+              this.hasOrder = true;
+              this.order = res.data.order;
+            }
           } else {
             this.$httpMessageState(res, res.data.message);
           }
